@@ -7,6 +7,6 @@ import { UserController } from "./user.controller";
 const UserRoutes = Router();
 
 // post route for cerate user
-UserRoutes.post('/create', UserController.creatingUser);
+UserRoutes.post('/create-admin', UserController.creatingUserAsAdmin);
 
 export default UserRoutes;
