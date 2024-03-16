@@ -17,7 +17,7 @@ type TUserAsAdmin = {
 /**
  * create user and admin into DB
  * @param payload user and admin data 
- * @returns void
+ * @returns Promise
  * 
  * @example payload = {
  *   name: string,
@@ -38,14 +38,19 @@ const creatingUserAsAdmin = async (payload: TUserAsAdmin) => {
     contactNumber: payload.contactNumber
   };
 
-  const result = await prisma.$transaction([
+  const [user, admin] = await prisma.$transaction([
     prisma.user.create({ data: userData }),
     prisma.admin.create({ data: adminData })
   ])
 
-  console.log(result);
+  console.log({ user, admin });
 
-  return 'User created...'
+  return {
+    name: admin.name,
+    email: user.email,
+    contactNumber: admin.contactNumber,
+    role: user.role,
+  };
 }
 
 /**

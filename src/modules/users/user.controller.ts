@@ -8,11 +8,21 @@ import { HTTPStatusCode } from "../../utils/httpCode";
  * @param res Response object
  */
 const creatingUserAsAdmin = async (req: Request, res: Response) => {
-  const result = await UserService.creatingUserAsAdmin(req.body);
-  res.status(HTTPStatusCode.Ok).json({
-    status: 'success',
-    data: result
-  });
+  try {
+    const result = await UserService.creatingUserAsAdmin(req.body);
+
+    res.status(HTTPStatusCode.Ok).json({
+      success: true,
+      massage: 'Created...👍',
+      data: result
+    });
+  } catch (error) {
+    res.status(HTTPStatusCode.BadRequest).json({
+      success: false,
+      massage: 'Error...💩',
+      error: error
+    })
+  }
 }
 
 export const UserController = {
