@@ -1,4 +1,4 @@
-const creatingUser = () => {
+const creatingUser = (payload: any) => {
   return 'User created...'
 }
 
