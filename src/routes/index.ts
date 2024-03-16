@@ -1,4 +1,5 @@
 import { Router } from "express";
+import UserRoutes from "../modules/users/user.route";
 
 /**
  * creating router using express router
@@ -16,7 +17,12 @@ type TModulesRouters = {
 /**
  * all module routes array 
  */
-const moduleRoutes: TModulesRouters[] = [];
+const moduleRoutes: TModulesRouters[] = [
+  {
+    path: '/user',
+    router: UserRoutes
+  }
+];
 
 
 moduleRoutes.forEach(r => AllRoutes.use(r.path, r.router));

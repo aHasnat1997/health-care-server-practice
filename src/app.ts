@@ -17,9 +17,11 @@ app.use('/api/v1', AllRoutes);
  * Home route
  */
 app.get('/', (req: Request, res: Response) => {
-  res.status(200).json({
-    message: 'Hello World...'
-  });
+  res.status(200).send(`
+    <body style="background-color:black;">
+      <h1 style="color:white;">🏥 Welcome to PH Health Care Server</h1>
+    </body>
+  `)
 })
 
 
