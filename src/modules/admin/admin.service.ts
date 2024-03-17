@@ -3,19 +3,19 @@ import prisma from "../../utils/prisma";
 const getAllAdmin = async () => {
   const search: Record<string, unknown> = {
     contactNumber: '01',
-    name: 'J'
+    name: 'b'
   }
 
-  const searchKeyValue: [string, unknown][] = [];
-  for (const key in search) {
-    searchKeyValue.push([key, search[key]]);
-  }
+  // const searchKeyValue: [string, unknown][] = [];
+  // for (const key in search) {
+  //   searchKeyValue.push([key, search[key]]);
+  // }
 
-  console.log(searchKeyValue);
+  // console.log(searchKeyValue);
 
-  const searchConditions = () => {
-    // searchConditions
-  }
+  // const searchConditions = () => {
+  //   // searchConditions
+  // }
 
 
   const result = await prisma.admin.findMany({
@@ -25,14 +25,12 @@ const getAllAdmin = async () => {
       createdAt: 'desc'
     },
     where: {
-      contactNumber: {
-        contains: '01',
-        mode: 'insensitive'
-      },
-      name: {
-        contains: 'B',
-        mode: 'insensitive'
-      }
+      OR: Object.keys(search).map(key => ({
+        [key]: {
+          contains: search[key],
+          mode: 'insensitive'
+        }
+      }))
     }
   });
 
