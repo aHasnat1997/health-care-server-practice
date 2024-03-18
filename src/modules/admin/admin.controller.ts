@@ -4,7 +4,10 @@ import { AdminService } from "./admin.service";
 
 const allAdmin = async (req: Request, res: Response) => {
   try {
-    const result = await AdminService.getAllAdmin();
+    const filters = {};
+    const options = {};
+
+    const result = await AdminService.getAllAdmin(filters, options);
 
     res.status(HTTPStatusCode.Ok).json({
       success: true,

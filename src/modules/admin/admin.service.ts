@@ -1,37 +1,59 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../utils/prisma";
 
-const getAllAdmin = async () => {
-  const search: Record<string, unknown> = {
-    contactNumber: '01',
-    name: 'b'
-  }
+/**
+ * type for options data
+ */
+type TOption = {
+  page?: number,
+  limit?: number,
+  sortBy?: string,
+  sortOrder?: 'desc' | 'asc' | string
+}
+/**
+ * Finding all admin data from DB
+ * @param filters object contents with any fields for filtering and searchTerm for 'name' or 'email' or 'contactNumber' fields  
+ * @param options object contents page, limit, sortBy and sortOrder values
+ * @returns all admin data
+ */
+const getAllAdmin = async (filters: Record<string, unknown>, options: TOption) => {
+  const conditions: Prisma.AdminWhereInput[] = [];
+  const { searchTerm, ...restFilters } = filters;
+  const pageLimit = options.limit || 10;
+  const pageNumber = options.page ? (options.page - 1) * pageLimit : 0;
 
-  // const searchKeyValue: [string, unknown][] = [];
-  // for (const key in search) {
-  //   searchKeyValue.push([key, search[key]]);
-  // }
-
-  // console.log(searchKeyValue);
-
-  // const searchConditions = () => {
-  //   // searchConditions
-  // }
-
-
-  const result = await prisma.admin.findMany({
-    take: 7,
-    skip: 0,
-    orderBy: {
-      createdAt: 'desc'
-    },
-    where: {
-      OR: Object.keys(search).map(key => ({
+  if (searchTerm) {
+    conditions.push({
+      OR: ['name', 'email', 'contactNumber'].map(key => ({
         [key]: {
-          contains: search[key],
+          contains: searchTerm,
           mode: 'insensitive'
         }
       }))
-    }
+    });
+  }
+  if (Object.keys(restFilters).length > 0) {
+    conditions.push({
+      AND: Object.keys(filters).map(key => ({
+        [key]: {
+          contains: filters[key],
+          mode: 'insensitive'
+        }
+      }))
+    });
+  }
+
+  // console.dir(conditions, { depth: 'infinity' });
+
+  const result = await prisma.admin.findMany({
+    take: pageLimit,
+    skip: pageNumber,
+    orderBy: options.sortBy && options.sortOrder ? {
+      [options.sortBy]: options.sortOrder
+    } : {
+      createdAt: 'desc'
+    },
+    where: { AND: conditions }
   });
 
   return result;
