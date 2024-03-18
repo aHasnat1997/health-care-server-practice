@@ -4,6 +4,8 @@ import { AdminService } from "./admin.service";
 
 const allAdmin = async (req: Request, res: Response) => {
   try {
+    console.log(req.query);
+
     const filters = {};
     const options = {};
 
@@ -12,7 +14,8 @@ const allAdmin = async (req: Request, res: Response) => {
     res.status(HTTPStatusCode.Ok).json({
       success: true,
       massage: 'Found...👍',
-      data: result
+      meta: result.meta,
+      data: result.data
     });
   } catch (error) {
     res.status(HTTPStatusCode.BadRequest).json({

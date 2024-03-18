@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../utils/prisma";
+import prisma from "../../db/prisma";
 
 /**
  * type for options data
@@ -55,8 +55,16 @@ const getAllAdmin = async (filters: Record<string, unknown>, options: TOption) =
     },
     where: { AND: conditions }
   });
+  const totalData = await prisma.admin.count({ where: { AND: conditions } })
 
-  return result;
+  return {
+    meta: {
+      page: options.page ? options.page : 1,
+      limit: pageLimit,
+      total: totalData
+    },
+    data: result
+  };
 };
 
 
