@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import { HTTPStatusCode } from "../../utils/httpCode";
 import { AdminService } from "./admin.service";
+import { pick } from "../../utils/pickObjFromArray";
 
 const allAdmin = async (req: Request, res: Response) => {
   try {
-    console.log(req.query);
-
-    const filters = {};
-    const options = {};
+    const filters = pick(req.query, ['name', 'email', 'searchTerm', 'contactNumber']);
+    const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
 
     const result = await AdminService.getAllAdmin(filters, options);
 

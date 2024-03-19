@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
-import prisma from "../../db/prisma";
+import { DB } from "../../db/dbOperation";
+
+const table = 'admin';
 
 /**
  * type for options data
@@ -17,54 +18,10 @@ type TOption = {
  * @returns all admin data
  */
 const getAllAdmin = async (filters: Record<string, unknown>, options: TOption) => {
-  const conditions: Prisma.AdminWhereInput[] = [];
-  const { searchTerm, ...restFilters } = filters;
-  const pageLimit = options.limit || 10;
-  const pageNumber = options.page ? (options.page - 1) * pageLimit : 0;
+  const searchTermKeyArray = ['name', 'email', 'contactNumber'];
 
-  if (searchTerm) {
-    conditions.push({
-      OR: ['name', 'email', 'contactNumber'].map(key => ({
-        [key]: {
-          contains: searchTerm,
-          mode: 'insensitive'
-        }
-      }))
-    });
-  }
-  if (Object.keys(restFilters).length > 0) {
-    conditions.push({
-      AND: Object.keys(filters).map(key => ({
-        [key]: {
-          contains: filters[key],
-          mode: 'insensitive'
-        }
-      }))
-    });
-  }
-
-  // console.dir(conditions, { depth: 'infinity' });
-
-  const result = await prisma.admin.findMany({
-    take: pageLimit,
-    skip: pageNumber,
-    orderBy: options.sortBy && options.sortOrder ? {
-      [options.sortBy]: options.sortOrder
-    } : {
-      createdAt: 'desc'
-    },
-    where: { AND: conditions }
-  });
-  const totalData = await prisma.admin.count({ where: { AND: conditions } })
-
-  return {
-    meta: {
-      page: options.page ? options.page : 1,
-      limit: pageLimit,
-      total: totalData
-    },
-    data: result
-  };
+  const result = await DB.findAll(table, filters, searchTermKeyArray, options)
+  return result;
 };
 
 
