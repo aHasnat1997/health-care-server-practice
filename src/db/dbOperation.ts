@@ -1,9 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-
-const findAll = async <T extends keyof PrismaClient>(
-  table: T,
+const findAll = async (
+  table: 'user' | 'admin',
   filters: Record<string, unknown>,
   searchTermKeyArray: string[],
   options: {
@@ -13,7 +12,7 @@ const findAll = async <T extends keyof PrismaClient>(
     sortOrder?: 'desc' | 'asc' | string
   }) => {
 
-  const conditions: Prisma.AdminWhereInput[] = [];
+  const conditions = [];
   const { searchTerm, ...restFilters } = filters;
   const pageLimit = Number(options.limit) || 10;
   const pageNumber = Number(options.page) ? (Number(options.page) - 1) * pageLimit : 0;
