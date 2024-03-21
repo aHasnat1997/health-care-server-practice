@@ -4,10 +4,10 @@ import config from "./config";
 
 const port = config.PORT;
 
-(async function main() {
+(function main() {
   try {
-    app.listen(port, () => console.log('Server is running on port: ', port));
+    app.listen(port, () => console.info('Server 🔥 on port:', port));
   } catch (error) {
     console.log(error);
   }
-})()
+})();
