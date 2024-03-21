@@ -5,11 +5,9 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
  * @param fn Async Function
  * @returns Promise resolve or reject
  */
-const handelAsyncReq = (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next))
-      .catch(error => next(error))
-  }
+const handelAsyncReq = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
+  Promise.resolve(fn(req, res, next))
+    .catch(error => next(error))
 };
 
-export default handelAsyncReq;
+export default handelAsyncReq; 
