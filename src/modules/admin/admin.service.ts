@@ -1,6 +1,7 @@
-import { DB } from "../../db/dbOperation";
+import { DBOperations } from "../../db";
+import prisma from "../../db/prisma";
 
-const table = 'admin';
+const AdminDB = new DBOperations('admin');
 
 /**
  * type for options data
@@ -19,12 +20,18 @@ type TOption = {
  */
 const getAllAdmin = async (filters: Record<string, unknown>, options: TOption) => {
   const searchTermKeyArray = ['name', 'email', 'contactNumber'];
-
-  const result = await DB.findAll(table, filters, searchTermKeyArray, options)
+  const result = await AdminDB.findAll(filters, searchTermKeyArray, options);
   return result;
 };
 
 
+const getSingleAdminByID = async (id: string) => {
+  const result = await AdminDB.getSingle('id', id);
+  return result;
+}
+
+
 export const AdminService = {
-  getAllAdmin
+  getAllAdmin,
+  getSingleAdminByID
 };
