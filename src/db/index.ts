@@ -2,6 +2,22 @@ import { PrismaClient } from "@prisma/client";
 
 type TTableName = 'user' | 'admin';
 
+// function getTable(tableName: TTableName) {
+//   const prisma = new PrismaClient();
+//   switch (tableName) {
+//     case 'user':
+//       return prisma.user;
+//     case 'admin':
+//       return prisma.admin
+//     default:
+//       throw new Error(`Invalid table name: ${tableName}`);
+//   }
+// };
+
+/**
+ * This class can perform all the DB Operations using prisma.
+ * @constructor table name
+ */
 export class DBOperations {
   private prisma: PrismaClient;
   public tableName: TTableName;
@@ -45,8 +61,6 @@ export class DBOperations {
         }))
       });
     }
-
-    // console.dir(conditions, { depth: 'infinity' });
 
     const result = await this.prisma[this.tableName].findMany({
       take: pageLimit,
