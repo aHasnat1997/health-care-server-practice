@@ -26,7 +26,11 @@ const getAllAdmin = async (filters: Record<string, unknown>, options: TOption) =
 
 
 const getSingleAdminByID = async (id: string) => {
-  const result = await AdminDB.getSingle('id', id);
+  const result = await AdminDB.findOne({
+    payload: {
+      where: { id }
+    }
+  });
   return result;
 }
 

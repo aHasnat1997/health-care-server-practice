@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 type TTableName = 'user' | 'admin';
 
@@ -84,15 +84,8 @@ export class DBOperations {
     };
   }
 
-  async getSingle(
-    key: string,
-    value: any
-  ) {
-    const result = await this.prisma[this.tableName].findFirstOrThrow({
-      where: {
-        [key]: value
-      }
-    });
+  async findOne({ payload: { where = {}, ...rest } = {} }) {
+    const result = await this.prisma[this.tableName].findUniqueOrThrow({ where, ...rest || {} });
     return {
       data: result
     };
