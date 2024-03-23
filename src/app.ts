@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { AllRoutes } from './routes';
 import { globalErrorHandler } from './error/globalErrorHandler';
 
@@ -14,6 +15,7 @@ export class Rocket {
     // express parsers
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(cookieParser());
 
     /**
     * all api routes
@@ -35,7 +37,7 @@ export class Rocket {
     this.app.use(globalErrorHandler)
   }
 
-  listen(port: any) {
+  launch(port: any) {
     this.app.listen(port, () => console.info('Server 🔥 on port:', port))
   }
 };

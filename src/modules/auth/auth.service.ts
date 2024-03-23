@@ -1,6 +1,8 @@
 import { UserStatus } from "@prisma/client";
 import { DBOperations } from "../../db";
 import bcrypt from 'bcrypt';
+import { Token } from "../../utils/token";
+import config from "../../config";
 
 const DB = new DBOperations('user');
 
@@ -21,9 +23,14 @@ const login = async (payload: {
   const passwordMatch = await bcrypt.compare(payload.password, isUserExist.data.password);
   if (!passwordMatch) throw new Error('incorrect password...');
 
-  return {
-    token: 'your token...'
-  }
+  const tokenPayload = {
+    email: isUserExist.data.email,
+    role: isUserExist.data.role
+  };
+  const accessToken = Token.sign(tokenPayload, config.TOKEN.ACCESS_TOKEN_SECRET, config.TOKEN.ACCESS_TOKEN_EXPIRES_TIME);
+  const refreshToken = Token.sign(tokenPayload, config.TOKEN.REFRESH_TOKEN_SECRET, config.TOKEN.REFRESH_TOKEN_EXPIRES_TIME);
+
+  return { accessToken, refreshToken }
 }
 
 export const AuthService = {
