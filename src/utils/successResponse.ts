@@ -5,7 +5,7 @@ import { Response } from "express";
 type THandlesResponse<T> = {
   success?: boolean,
   statusCode?: number,
-  massage: string,
+  message: string,
   mete?: {}
   data: T | T[] | null
 }
@@ -20,7 +20,7 @@ const successResponse = <T>(res: Response, data: THandlesResponse<T>, statusCode
   const code = statusCode || 200;
   res.status(code || 200).json({
     'success': true,
-    'massage': data.massage,
+    'message': data.message,
     'mete': data.mete,
     'data': data.data
   });

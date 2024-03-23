@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
   PORT: process.env.PORT,
-  BCRYPT_SALT_ROUNDS: process.env.BCRYPT_SALT_ROUNDS,
+  BCRYPT_SALT_ROUNDS: process.env.BCRYPT_SALT_ROUNDS as string,
   TOKEN: {
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXPIRES_TIME: process.env.ACCESS_TOKEN_EXPIRES_TIME as string,

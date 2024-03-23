@@ -90,4 +90,11 @@ export class DBOperations {
       data: result
     };
   }
+
+  async updateOne({ payload: { where = {}, data = {} } = {} }) {
+    const result = await this.prisma[this.tableName].update({ where, data });
+    return {
+      data: result
+    }
+  }
 };

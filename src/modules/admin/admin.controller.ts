@@ -14,7 +14,7 @@ const allAdmin = handelAsyncReq(async (req: Request, res: Response) => {
   const result = await AdminService.getAllAdmin(filters, options);
   successResponse(res, {
     success: true,
-    massage: 'Found...👍',
+    message: 'Found...👍',
     mete: result.meta,
     data: result.data
   }, HTTPStatusCode.Ok);
@@ -24,7 +24,7 @@ const singleAdminByID = handelAsyncReq(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await AdminService.getSingleAdminByID(id);
   successResponse(res, {
-    massage: 'Found...👍',
+    message: 'Found...👍',
     data: result
   }, HTTPStatusCode.Ok);
 })

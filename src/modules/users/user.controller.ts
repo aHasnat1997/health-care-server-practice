@@ -13,13 +13,13 @@ const creatingUserAsAdmin = async (req: Request, res: Response) => {
 
     res.status(HTTPStatusCode.Ok).json({
       success: true,
-      massage: 'Created...👍',
+      message: 'Created...👍',
       data: result
     });
   } catch (error) {
     res.status(HTTPStatusCode.BadRequest).json({
       success: false,
-      massage: 'Error...💩',
+      message: 'Error...💩',
       error: error
     })
   }
