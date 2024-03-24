@@ -56,9 +56,22 @@ const forgetPassword = handelAsyncReq(async (req: Request, res: Response) => {
   });
 });
 
+// forget password
+const newPasswordSet = handelAsyncReq(async (req: Request, res: Response) => {
+  const token = req.headers.authorization || '';
+
+  const result = await AuthService.setNewPassword(token, req.body);
+
+  successResponse(res, {
+    message: 'Password reset done...',
+    data: result
+  });
+});
+
 export const AuthController = {
   login,
   assessTokenRenew,
   passwordReset,
-  forgetPassword
+  forgetPassword,
+  newPasswordSet
 };

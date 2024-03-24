@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
 type TTableName = 'user' | 'admin';
+// type TTableName = Prisma.UserDelegate<DefaultArgs>;
 
 // function getTable(tableName: TTableName) {
 //   const prisma = new PrismaClient();
@@ -35,7 +36,7 @@ export class DBOperations {
       limit?: number,
       sortBy?: string,
       sortOrder?: 'desc' | 'asc' | string
-    }) {
+    }, ...rest: any) {
     const conditions = [];
     const { searchTerm, ...restFilters } = filters;
     const pageLimit = Number(options.limit) || 10;
@@ -70,7 +71,8 @@ export class DBOperations {
       } : {
         createdAt: 'desc'
       },
-      where: { AND: conditions }
+      where: { AND: conditions },
+      rest
     });
     const totalData = await this.prisma[this.tableName].count({ where: { AND: conditions } })
 

@@ -125,7 +125,7 @@ const forgetPassword = async (email: string) => {
     email: isUserExist.data.email,
     role: isUserExist.data.role
   };
-  const token = Token.sign(tokenPayload, config.TOKEN.ACCESS_TOKEN_SECRET, config.TOKEN.ACCESS_TOKEN_EXPIRES_TIME);
+  const token = Token.sign(tokenPayload, config.TOKEN.FORGOT_TOKEN_SECRET, config.TOKEN.FORGOT_TOKEN_EXPIRES_TIME);
   const resetLink = `http://localhost:3000?id=${isUserExist.data.id}&token=${token}`;
 
   await sandMail({
@@ -149,9 +149,43 @@ const forgetPassword = async (email: string) => {
   return null;
 };
 
+const setNewPassword = async (token: string, payload: { password: string }) => {
+  const isTokenOk: any = Token.verify(token, config.TOKEN.FORGOT_TOKEN_SECRET);
+  if (!isTokenOk) throw new Error('Unauthorize...');
+  const isTokenBlacklisted: any = Token.isTokenBlacklisted(token);
+  if (!isTokenBlacklisted) throw new Error('Unauthorize...');
+  Token.blacklist(token);
+
+  const user = await DB.findOne({
+    payload: {
+      where: {
+        email: isTokenOk.email as string,
+        status: UserStatus.ACTIVE,
+      }
+    }
+  });
+  if (!user) throw new Error('Unauthorize...');
+
+  const newHashPassword = await bcrypt.hash(payload.password, Number(config.BCRYPT_SALT_ROUNDS));
+
+  await DB.updateOne({
+    payload: {
+      where: {
+        email: user.data.email
+      },
+      data: {
+        password: newHashPassword
+      }
+    }
+  });
+
+  return null;
+}
+
 export const AuthService = {
   login,
   renewAssessToken,
   resetPassword,
-  forgetPassword
+  forgetPassword,
+  setNewPassword
 };
