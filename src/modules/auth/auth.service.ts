@@ -111,17 +111,22 @@ const resetPassword = async (token: string, payload: { oldPassword: string, newP
  * User forget password
  */
 const forgetPassword = async (email: string) => {
-  try {
-    await sandMail({
-      to: email,
-      subject: 'test mail',
-      html: '<h1>Test mail</h1>'
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  const isUserExist = await DB.findOne({
+    payload: {
+      where: {
+        email,
+        status: UserStatus.ACTIVE
+      }
+    }
+  });
+  if (!isUserExist) throw new Error('Unauthorize...');
 
-  return 'check mail. It takes only 5 min...';
+  await sandMail({
+    to: isUserExist.data.email,
+    subject: 'test mail',
+    html: '<h1>Test mail</h1>'
+  });
+  return null;
 };
 
 export const AuthService = {

@@ -48,10 +48,10 @@ const passwordReset = handelAsyncReq(async (req: Request, res: Response) => {
 
 // forget password
 const forgetPassword = handelAsyncReq(async (req: Request, res: Response) => {
-  const result = await AuthService.forgetPassword(req.body);
+  const result = await AuthService.forgetPassword(req.body.email);
 
   successResponse(res, {
-    message: 'forget password processing...',
+    message: 'Check your mail. It takes only 5 min...',
     data: result
   });
 });
