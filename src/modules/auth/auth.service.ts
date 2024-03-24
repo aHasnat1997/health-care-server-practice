@@ -6,6 +6,11 @@ import config from "../../config";
 
 const DB = new DBOperations('user');
 
+/**
+ * user login route.
+ * @param payload email and password
+ * @returns accessToken and refreshToken
+ */
 const login = async (payload: {
   email: string,
   password: string
@@ -18,7 +23,7 @@ const login = async (payload: {
       }
     }
   });
-  console.log(isUserExist);
+  if (!isUserExist) throw new Error('No user found...');
 
   const passwordMatch = await bcrypt.compare(payload.password, isUserExist.data.password);
   if (!passwordMatch) throw new Error('incorrect password...');
@@ -33,6 +38,11 @@ const login = async (payload: {
   return { accessToken, refreshToken }
 };
 
+/**
+ * Renew user token.
+ * @param token user refresh token
+ * @returns accessToken and refreshToken
+ */
 const renewAssessToken = async (token: string) => {
   const isTokenOk: any = Token.verify(token, config.TOKEN.REFRESH_TOKEN_SECRET);
   if (!isTokenOk) throw new Error('Unauthorize...');
@@ -57,6 +67,11 @@ const renewAssessToken = async (token: string) => {
   return { accessToken, refreshToken }
 }
 
+/**
+ * Reset user password.
+ * @param token user assess token
+ * @param payload old password and new password
+ */
 const resetPassword = async (token: string, payload: { oldPassword: string, newPassword: string }) => {
   const isTokenOk: any = Token.verify(token, config.TOKEN.ACCESS_TOKEN_SECRET);
   if (!isTokenOk) throw new Error('Unauthorize...');
@@ -76,7 +91,7 @@ const resetPassword = async (token: string, payload: { oldPassword: string, newP
 
   const newHashPassword = await bcrypt.hash(payload.newPassword, Number(config.BCRYPT_SALT_ROUNDS));
 
-  const newData = await DB.updateOne({
+  await DB.updateOne({
     payload: {
       where: {
         email: user.data.email,
@@ -91,8 +106,16 @@ const resetPassword = async (token: string, payload: { oldPassword: string, newP
   return null;
 };
 
+/**
+ * User forget password
+ */
+const forgetPassword = async () => {
+  return 'check mail. It takes only 5 min...';
+};
+
 export const AuthService = {
   login,
   renewAssessToken,
-  resetPassword
+  resetPassword,
+  forgetPassword
 };

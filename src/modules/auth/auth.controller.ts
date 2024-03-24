@@ -3,6 +3,7 @@ import handelAsyncReq from "../../utils/handelAsyncReq";
 import { AuthService } from "./auth.service";
 import successResponse from "../../utils/successResponse";
 
+// user login
 const login = handelAsyncReq(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
   res.cookie('refresh_token', result.refreshToken, {
@@ -17,6 +18,7 @@ const login = handelAsyncReq(async (req: Request, res: Response) => {
   });
 });
 
+// token renew
 const assessTokenRenew = handelAsyncReq(async (req: Request, res: Response) => {
   const token = req.cookies.refresh_token;
   const result = await AuthService.renewAssessToken(token);
@@ -32,6 +34,7 @@ const assessTokenRenew = handelAsyncReq(async (req: Request, res: Response) => {
   });
 });
 
+// reset password
 const passwordReset = handelAsyncReq(async (req: Request, res: Response) => {
   const token = req.headers.authorization || '';
 
@@ -41,10 +44,21 @@ const passwordReset = handelAsyncReq(async (req: Request, res: Response) => {
     message: 'Reset Complete...',
     data: result
   });
-})
+});
+
+// forget password
+const forgetPassword = handelAsyncReq(async (req: Request, res: Response) => {
+  const result = await AuthService.forgetPassword();
+
+  successResponse(res, {
+    message: 'forget password processing...',
+    data: result
+  });
+});
 
 export const AuthController = {
   login,
   assessTokenRenew,
-  passwordReset
+  passwordReset,
+  forgetPassword
 };
