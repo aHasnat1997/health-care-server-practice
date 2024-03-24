@@ -3,6 +3,7 @@ import { DBOperations } from "../../db";
 import bcrypt from 'bcrypt';
 import { Token } from "../../utils/token";
 import config from "../../config";
+import { sandMail } from "../../utils/sendMail";
 
 const DB = new DBOperations('user');
 
@@ -109,7 +110,17 @@ const resetPassword = async (token: string, payload: { oldPassword: string, newP
 /**
  * User forget password
  */
-const forgetPassword = async () => {
+const forgetPassword = async (email: string) => {
+  try {
+    await sandMail({
+      to: email,
+      subject: 'test mail',
+      html: '<h1>Test mail</h1>'
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
   return 'check mail. It takes only 5 min...';
 };
 

@@ -48,7 +48,7 @@ const passwordReset = handelAsyncReq(async (req: Request, res: Response) => {
 
 // forget password
 const forgetPassword = handelAsyncReq(async (req: Request, res: Response) => {
-  const result = await AuthService.forgetPassword();
+  const result = await AuthService.forgetPassword(req.body);
 
   successResponse(res, {
     message: 'forget password processing...',

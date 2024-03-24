@@ -12,5 +12,11 @@ export default {
     REFRESH_TOKEN_EXPIRES_TIME: process.env.REFRESH_TOKEN_EXPIRES_TIME as string,
     FORGOT_TOKEN_SECRET: process.env.FORGOT_TOKEN_SECRET as string,
     FORGOT_TOKEN_EXPIRES_TIME: process.env.FORGOT_TOKEN_EXPIRES_TIME as string
+  },
+  SMTP: {
+    HOST: process.env.SMTP_HOST as string,
+    PORT: process.env.SMTP_PORT,
+    USER: process.env.SMTP_USER,
+    PASS: process.env.SMTP_PASS,
   }
 }
