@@ -121,10 +121,30 @@ const forgetPassword = async (email: string) => {
   });
   if (!isUserExist) throw new Error('Unauthorize...');
 
+  const tokenPayload = {
+    email: isUserExist.data.email,
+    role: isUserExist.data.role
+  };
+  const token = Token.sign(tokenPayload, config.TOKEN.ACCESS_TOKEN_SECRET, config.TOKEN.ACCESS_TOKEN_EXPIRES_TIME);
+  const resetLink = `http://localhost:3000?id=${isUserExist.data.id}&token=${token}`;
+
   await sandMail({
     to: isUserExist.data.email,
-    subject: 'test mail',
-    html: '<h1>Test mail</h1>'
+    subject: 'Reset Password',
+    html: `
+    <body>
+      <div style="width: 100%; display: flex;justify-content: center;">
+        <div style="padding: .5rem 2rem;width: 80%;border: 1px solid gray">
+          <h1>Reset Password</h1>
+          <p>
+          Hello Dear,
+          Here is a mail for reset your password. Just click this button for next step.
+          </p>
+          <a href='${resetLink}'><button>Click Here...</button></a>
+        </div>
+      </div>
+    </body>
+    `
   });
   return null;
 };
