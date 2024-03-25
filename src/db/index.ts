@@ -72,7 +72,7 @@ export class DBOperations {
         createdAt: 'desc'
       },
       where: { AND: conditions },
-      rest
+      ...rest
     });
     const totalData = await this.prisma[this.tableName].count({ where: { AND: conditions } })
 

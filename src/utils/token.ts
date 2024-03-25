@@ -2,6 +2,13 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const blackListedTokens: string[] = [];
 
+export type TTokenPayload = {
+  email: string,
+  role: string,
+  iat: number,
+  exp: number
+}
+
 /**
  * Sign a unique token to user
  * @param payload JwtPayload
@@ -20,7 +27,7 @@ const sign = (payload: JwtPayload, secret: string, expiresIn: string): string =>
  * @param secret token sign secret
  * @returns Boolean
  */
-const verify = (token: string, secret: string): string | jwt.JwtPayload => {
+const verify = (token: string, secret: string): string | jwt.JwtPayload | TTokenPayload => {
   const verify = jwt.verify(token, secret)
   return verify;
 }
@@ -30,7 +37,7 @@ const verify = (token: string, secret: string): string | jwt.JwtPayload => {
  * @param token token string
  * @returns JwtPayload
  */
-const decode = (token: string): string | jwt.JwtPayload | null => {
+const decode = (token: string): string | jwt.JwtPayload | null | TTokenPayload => {
   const decode = jwt.decode(token);
   return decode;
 }
@@ -39,9 +46,9 @@ const decode = (token: string): string | jwt.JwtPayload | null => {
  * Blacklist token
  * @param token need to blacklist
  */
-const blacklist = (token: string) => {
+const blacklist = (token: string): void => {
   blackListedTokens.push(token);
-  console.log('stage-1', blackListedTokens);
+  console.log('blackListedTokens', blackListedTokens);
 };
 
 /**
@@ -49,7 +56,7 @@ const blacklist = (token: string) => {
  * @param token check token
  * @returns Boolean
  */
-const isTokenBlacklisted = (token: string) => {
+const isTokenBlacklisted = (token: string): boolean => {
   const isMatch = blackListedTokens.find(t => t === token);
   if (isMatch) return false;
   return true;
