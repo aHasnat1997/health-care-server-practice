@@ -9,7 +9,8 @@ import { HTTPStatusCode } from "../../utils/httpCode";
  */
 const creatingUserAsAdmin = async (req: Request, res: Response) => {
   try {
-    const result = await UserService.creatingUserAsAdmin(req.body);
+    const result = await UserService.creatingUserAsAdmin(req);
+
 
     res.status(HTTPStatusCode.Ok).json({
       success: true,
