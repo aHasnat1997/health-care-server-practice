@@ -27,6 +27,8 @@ export type TImageUpload = {
   api_key: string;
 };
 
+const filePath = path.join(process.cwd(), 'uploads')
+
 cloudinary.config({
   cloud_name: config.CLOUDINARY.CLOUD_NAME,
   api_key: config.CLOUDINARY.API_KEY,
@@ -35,7 +37,8 @@ cloudinary.config({
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), 'uploads'));
+    // fs.createWriteStream(filePath);
+    cb(null, filePath);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
