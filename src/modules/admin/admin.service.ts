@@ -1,5 +1,4 @@
 import { DBOperations } from "../../db";
-import prisma from "../../db/prisma";
 
 const AdminDB = new DBOperations('admin');
 
