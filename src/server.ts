@@ -1,12 +1,14 @@
-import { Server } from "http"
-import app from "./app";
+// import { Server } from "http"
+// import app from "./app";
+import { Rocket } from "./app";
 import config from "./config";
 
-const port = config.PORT;
-
 (function main() {
+  const port = config.PORT;
+  const rocket = new Rocket();
   try {
-    app.listen(port, () => console.info('Server 🔥 on port:', port));
+    rocket.start();
+    rocket.launch(port);
   } catch (error) {
     console.log(error);
   }

@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { UserController } from "./user.controller";
+import { authGuard } from "../../middlewares/authGuard";
+import { UserRole } from "@prisma/client";
+import { uploadImage } from "../../utils/imageUpload";
 
 /**
  * User all endpoints routes
@@ -7,6 +10,11 @@ import { UserController } from "./user.controller";
 const UserRoutes = Router();
 
 // post route for cerate user
-UserRoutes.post('/create-admin', UserController.creatingUserAsAdmin);
+UserRoutes.post(
+  '/create-admin',
+  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadImage.upload.single('image'),
+  UserController.creatingUserAsAdmin
+);
 
 export default UserRoutes;

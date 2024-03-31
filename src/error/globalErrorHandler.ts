@@ -17,7 +17,7 @@ export const globalErrorHandler = (
 ) => {
   res.status(HTTPStatusCode.BadRequest).json({
     success: false,
-    massage: 'Error...💩',
+    message: error.message || 'Error...💩',
     error: error
   })
 };

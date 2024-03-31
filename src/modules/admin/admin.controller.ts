@@ -11,16 +11,25 @@ import handelAsyncReq from "../../utils/handelAsyncReq";
 const allAdmin = handelAsyncReq(async (req: Request, res: Response) => {
   const filters = pick(req.query, ['name', 'email', 'searchTerm', 'contactNumber']);
   const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
-
   const result = await AdminService.getAllAdmin(filters, options);
   successResponse(res, {
     success: true,
-    massage: 'Found...👍',
+    message: 'Found...👍',
     mete: result.meta,
     data: result.data
   }, HTTPStatusCode.Ok);
 });
 
+const singleAdminByID = handelAsyncReq(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await AdminService.getSingleAdminByID(id);
+  successResponse(res, {
+    message: 'Found...👍',
+    data: result
+  }, HTTPStatusCode.Ok);
+})
+
 export const AdminController = {
-  allAdmin
+  allAdmin,
+  singleAdminByID
 };
