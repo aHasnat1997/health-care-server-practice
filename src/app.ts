@@ -12,13 +12,17 @@ export class Rocket {
     this.app = express();
   }
 
-  start() {
-    // express parsers
+  // express parsers
+  private parsers() {
     this.app.use(express.json());
     this.app.use(cors());
     this.app.use(cookieParser());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+  }
+
+  start() {
+    this.parsers();
 
     /**
     * all api routes
