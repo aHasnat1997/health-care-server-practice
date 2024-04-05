@@ -17,4 +17,12 @@ UserRoutes.post(
   UserController.creatingUserAsAdmin
 );
 
+// post route for cerate doctor
+UserRoutes.post(
+  '/create-doctor',
+  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadImage.upload.single('image'),
+  UserController.creatingUserAsDoctor
+);
+
 export default UserRoutes;
