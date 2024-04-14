@@ -19,6 +19,27 @@ enum UserStatus {
   BLOCKED
 }
 
+enum Genders {
+  MALE
+  FEMALE
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  B_POSITIVE
+  O_POSITIVE
+  AB_POSITIVE
+  A_NEGATIVE
+  B_NEGATIVE
+  O_NEGATIVE
+  AB_NEGATIVE
+}
+
+enum MaritalStatus {
+  MARRIED
+  UNMARRIED
+}
+
 model User {
   id                 String     @id @default(uuid())
   email              String     @unique
@@ -29,6 +50,8 @@ model User {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   admin              Admin?
+  doctor             Doctor?
+  patient            Patient?
 
   @@map("users")
 }
@@ -45,4 +68,69 @@ model Admin {
   updatedAt     DateTime @updatedAt
 
   @@map("admins")
+}
+
+model Doctor {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  userEmail           User     @relation(fields: [email], references: [email])
+  profilePhoto        String?
+  contactNumber       String
+  address             String
+  registrationNumber  String
+  experience          Int
+  gender              Genders
+  appointmentFee      Int
+  qualification       String
+  currentWorkingPlace String
+  designation         String
+  averageRating       Float    @default(0)
+  isDeleted           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("doctors")
+}
+
+model Patient {
+  id                String             @id @default(uuid())
+  name              String
+  email             String             @unique
+  userEmail         User               @relation(fields: [email], references: [email])
+  profilePhoto      String?
+  contactNumber     String
+  address           String
+  isDeleted         Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  patientHealthData PatientHealthData?
+
+  @@map("patients")
+}
+
+model PatientHealthData {
+  id                  String        @id @default(uuid())
+  patientId           String        @unique
+  patient             Patient       @relation(fields: [patientId], references: [id])
+  dateOfBirth         DateTime
+  gender              Genders
+  bloodGroup          BloodGroup
+  hasAllergies        Boolean?
+  hasDiabetes         Boolean?
+  height              String
+  weight              String
+  smokingStatus       Boolean?
+  dietaryPreferences  String?
+  pregnancyStatus     Boolean?
+  mentalHealthHistory String?
+  immunizationStatus  String?
+  hasPastSurgeries    Boolean?
+  recentAnxiety       Boolean?
+  recentDepression    Boolean?
+  maritalStatus       MaritalStatus
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("patientHealthDatas")
 }
