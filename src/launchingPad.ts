@@ -1,4 +1,4 @@
-import { Rocket } from "./app";
+import { Rocket } from "./rocket";
 import config from "./config";
 
 (function main() {
