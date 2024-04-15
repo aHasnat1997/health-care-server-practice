@@ -13,7 +13,7 @@ export class Rocket {
   }
 
   // express parsers
-  private parsers() {
+  load() {
     this.app.use(express.json());
     this.app.use(cors());
     this.app.use(cookieParser());
@@ -21,9 +21,7 @@ export class Rocket {
     this.app.use(bodyParser.urlencoded({ extended: true }));
   }
 
-  start() {
-    this.parsers();
-
+  initiate() {
     /**
     * all api routes
     */
@@ -44,7 +42,7 @@ export class Rocket {
     this.app.use(globalErrorHandler)
   }
 
-  launch(port: any) {
-    this.app.listen(port, () => console.info('Server 🔥 on port:', port))
+  launch(port: string) {
+    this.app.listen(port, () => console.info(`🚀 Rocket launched on ${port} port`))
   }
 };
