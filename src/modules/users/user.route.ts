@@ -25,4 +25,11 @@ UserRoutes.post(
   UserController.creatingUserAsDoctor
 );
 
+// post route for cerate patient
+UserRoutes.post(
+  '/create-patient',
+  uploadImage.upload.single('image'),
+  UserController.creatingUserAsPatient
+);
+
 export default UserRoutes;

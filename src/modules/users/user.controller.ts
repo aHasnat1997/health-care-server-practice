@@ -26,7 +26,19 @@ const creatingUserAsDoctor = handelAsyncReq(async (req: Request, res: Response) 
   }, HTTPStatusCode.Created);
 })
 
+/**
+ * Create a single user as patient
+ */
+const creatingUserAsPatient = handelAsyncReq(async (req: Request, res: Response) => {
+  const result = await UserService.creatingUserAsPatient(req);
+  successResponse(res, {
+    message: 'Created...👍',
+    data: result
+  }, HTTPStatusCode.Created);
+})
+
 export const UserController = {
   creatingUserAsAdmin,
-  creatingUserAsDoctor
+  creatingUserAsDoctor,
+  creatingUserAsPatient
 }
