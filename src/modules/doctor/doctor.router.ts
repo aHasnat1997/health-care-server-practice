@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { DoctorController } from './doctor.controller';
-import { authGuard } from '../../middlewares/authGuard';
 
 const DoctorRoute = Router();
 

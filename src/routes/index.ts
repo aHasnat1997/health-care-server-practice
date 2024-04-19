@@ -2,7 +2,8 @@ import { Router } from "express";
 import UserRoutes from "../modules/users/user.route";
 import AdminRoute from "../modules/admin/admin.router";
 import AuthRoutes from "../modules/auth/auth.router";
-import DoctorRoute from "../modules/doctor/doctor.routre";
+import DoctorRoute from "../modules/doctor/doctor.router";
+import PatientRoute from "../modules/patient/patient.router";
 
 /**
  * creating router using express router
@@ -36,6 +37,10 @@ const moduleRoutes: TModulesRouters[] = [
   {
     path: '/doctor',
     router: DoctorRoute
+  },
+  {
+    path: '/patient',
+    router: PatientRoute
   }
 ];
 
