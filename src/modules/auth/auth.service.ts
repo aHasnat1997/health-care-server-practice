@@ -1,9 +1,10 @@
-import { UserStatus } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import { DBOperations } from "../../db";
 import bcrypt from 'bcrypt';
 import { Token } from "../../utils/token";
 import config from "../../config";
 import { sandMail } from "../../utils/sendMail";
+import prisma from "../../db/prisma";
 
 const DB = new DBOperations('user');
 
@@ -182,10 +183,52 @@ const setNewPassword = async (token: string, payload: { password: string }) => {
   return null;
 }
 
+const myInfo = async (role: UserRole, email: string) => {
+  let result;
+
+  switch (role) {
+    case UserRole.ADMIN || UserRole.SUPER_ADMIN:
+      result = await prisma.admin.findUniqueOrThrow({
+        where: { email },
+      });
+      break;
+
+    case UserRole.DOCTOR:
+      result = await prisma.doctor.findUniqueOrThrow({
+        where: { email },
+        include: {
+          appointments: true,
+          doctorSchedules: true,
+          doctorSpecialties: true,
+          reviews: true
+        }
+      });
+      break;
+
+    case UserRole.PATIENT:
+      result = await prisma.patient.findUniqueOrThrow({
+        where: { email },
+        include: {
+          patientHealthData: true,
+          medicalReport: true,
+          appointments: true,
+          prescriptions: true
+        }
+      })
+      break;
+
+    default:
+      break;
+  }
+
+  return result;
+}
+
 export const AuthService = {
   login,
   renewAssessToken,
   resetPassword,
   forgetPassword,
-  setNewPassword
+  setNewPassword,
+  myInfo
 };

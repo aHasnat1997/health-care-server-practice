@@ -1,10 +1,11 @@
+import { UserRole } from "@prisma/client";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 const blackListedTokens: string[] = [];
 
 export type TTokenPayload = {
   email: string,
-  role: string,
+  role: UserRole,
   iat: number,
   exp: number
 }

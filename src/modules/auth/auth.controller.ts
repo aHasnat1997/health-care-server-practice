@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import handelAsyncReq from "../../utils/handelAsyncReq";
 import { AuthService } from "./auth.service";
 import successResponse from "../../utils/successResponse";
+import { TTokenPayload } from "../../utils/token";
+import { UserRole } from "@prisma/client";
 
 // user login
 const login = handelAsyncReq(async (req: Request, res: Response) => {
@@ -68,10 +70,21 @@ const newPasswordSet = handelAsyncReq(async (req: Request, res: Response) => {
   });
 });
 
+const myData = handelAsyncReq(async (req: Request, res: Response) => {
+  const user = req.user as TTokenPayload;
+  const result = await AuthService.myInfo(user.role, user.email);
+
+  successResponse(res, {
+    message: 'User data retrieved...',
+    data: result
+  });
+})
+
 export const AuthController = {
   login,
   assessTokenRenew,
   passwordReset,
   forgetPassword,
-  newPasswordSet
+  newPasswordSet,
+  myData
 };

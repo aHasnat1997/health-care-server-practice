@@ -10,11 +10,16 @@ import config from "../config";
  */
 export const authGuard = (...accessTo: UserRole[]) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const reqUserRole = req.headers.authorization;
-    if (!reqUserRole) throw new Error('No token found...');
-    const userTokenRole = Token.verify(reqUserRole, config.TOKEN.ACCESS_TOKEN_SECRET) as TTokenPayload;
-    const isRoleMatched = accessTo.find(r => r === userTokenRole.role);
+    const token = req.headers.authorization;
+    if (!token) throw new Error('No token found...');
+
+    const userTokenDecode = Token.verify(token, config.TOKEN.ACCESS_TOKEN_SECRET) as TTokenPayload;
+
+    const isRoleMatched = accessTo.find(r => r === userTokenDecode.role);
     if (!isRoleMatched) throw new Error('Unauthorized...');
+
+    req.user = userTokenDecode;
+
     next();
   } catch (error) {
     console.log(error);
