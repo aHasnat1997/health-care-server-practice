@@ -17,22 +17,33 @@ const login = async (payload: {
   email: string,
   password: string
 }) => {
-  const isUserExist = await DB.findOne({
-    payload: {
-      where: {
-        email: payload.email,
-        status: UserStatus.ACTIVE
-      }
+  const isUserExist = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      status: UserStatus.ACTIVE
+    },
+    include: {
+      admin: true,
+      doctor: true,
+      patient: true
     }
   });
   if (!isUserExist) throw new Error('No user found...');
+  console.log({ isUserExist });
 
-  const passwordMatch = await bcrypt.compare(payload.password, isUserExist.data.password);
+
+  const passwordMatch = await bcrypt.compare(payload.password, isUserExist.password);
   if (!passwordMatch) throw new Error('incorrect password...');
 
   const tokenPayload = {
-    email: isUserExist.data.email,
-    role: isUserExist.data.role
+    name: isUserExist.admin ? isUserExist.admin.name :
+      isUserExist.doctor ? isUserExist.doctor.name :
+        isUserExist.patient ? isUserExist.patient.name : '',
+    email: isUserExist.email,
+    image: isUserExist.admin ? isUserExist.admin.profilePhoto :
+      isUserExist.doctor ? isUserExist.doctor.profilePhoto :
+        isUserExist.patient ? isUserExist.patient.profilePhoto : null,
+    role: isUserExist.role
   };
   const accessToken = Token.sign(tokenPayload, config.TOKEN.ACCESS_TOKEN_SECRET, config.TOKEN.ACCESS_TOKEN_EXPIRES_TIME);
   const refreshToken = Token.sign(tokenPayload, config.TOKEN.REFRESH_TOKEN_SECRET, config.TOKEN.REFRESH_TOKEN_EXPIRES_TIME);
@@ -49,19 +60,28 @@ const renewAssessToken = async (token: string) => {
   const isTokenOk: any = Token.verify(token, config.TOKEN.REFRESH_TOKEN_SECRET);
   if (!isTokenOk) throw new Error('Unauthorize...');
 
-  const user = await DB.findOne({
-    payload: {
-      where: {
-        email: isTokenOk.email as string,
-        status: UserStatus.ACTIVE,
-      }
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: isTokenOk.email,
+      status: UserStatus.ACTIVE
+    },
+    include: {
+      admin: true,
+      doctor: true,
+      patient: true
     }
   });
   if (!user) throw new Error('Unauthorize...');
 
   const tokenPayload = {
-    email: user.data.email,
-    role: user.data.role
+    name: user.admin ? user.admin.name :
+      user.doctor ? user.doctor.name :
+        user.patient ? user.patient.name : '',
+    email: user.email,
+    image: user.admin ? user.admin.profilePhoto :
+      user.doctor ? user.doctor.profilePhoto :
+        user.patient ? user.patient.profilePhoto : null,
+    role: user.role
   };
 
   const accessToken = Token.sign(tokenPayload, config.TOKEN.ACCESS_TOKEN_SECRET, config.TOKEN.ACCESS_TOKEN_EXPIRES_TIME);

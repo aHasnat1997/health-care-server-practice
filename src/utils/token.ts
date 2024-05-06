@@ -4,7 +4,9 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const blackListedTokens: string[] = [];
 
 export type TTokenPayload = {
-  email: string,
+  name: string;
+  email: string;
+  image: string | null;
   role: UserRole,
   iat: number,
   exp: number

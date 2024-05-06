@@ -3,7 +3,6 @@ import handelAsyncReq from "../../utils/handelAsyncReq";
 import { AuthService } from "./auth.service";
 import successResponse from "../../utils/successResponse";
 import { TTokenPayload } from "../../utils/token";
-import { UserRole } from "@prisma/client";
 
 // user login
 const login = handelAsyncReq(async (req: Request, res: Response) => {
