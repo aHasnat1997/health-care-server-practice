@@ -22,7 +22,7 @@ export const authGuard = (...accessTo: UserRole[]) => async (req: Request, res: 
 
     next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 };

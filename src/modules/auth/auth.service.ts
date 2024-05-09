@@ -29,7 +29,7 @@ const login = async (payload: {
     }
   });
   if (!isUserExist) throw new Error('No user found...');
-  console.log({ isUserExist });
+  // console.log({ isUserExist });
 
 
   const passwordMatch = await bcrypt.compare(payload.password, isUserExist.password);
